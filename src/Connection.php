@@ -13,24 +13,27 @@ use Dotenv\Dotenv;
 abstract class Connection
 {
 
-    protected $db;
+    protected static $engine;
+    protected static $name;
+    protected static $username;
+    protected static $password;
 
     /**
      *
      */
     public function __construct()
     {
-        $this->loadDotEnv();
-        $this->engine   = getenv('DB_ENGINE');
-        $this->name     = getenv('DB_NAME');
-        $this->username = getenv('DB_USERNAME');
-        $this->password = getenv('DB_PASSWORD');
+        self::loadDotEnv();
+        self::$engine   = getenv('DB_ENGINE');
+        self::$name     = getenv('DB_NAME');
+        self::$username = getenv('DB_USERNAME');
+        self::$password = getenv('DB_PASSWORD');
     }
 
     /**
      *
      */
-    private function loadDotEnv(){
+    private static function loadDotEnv(){
         $dotenv = new Dotenv(__DIR__ . '/../');
         $dotenv->load();
     }
@@ -38,10 +41,10 @@ abstract class Connection
     /**
      * @return \PDO
      */
-    protected function createConnection()
+    protected static function createConnection()
     {
         try {
-            return new PDO($this->engine . ":host=localhost;dbname=" . $this->name, $this->username, $this->password);
+            return new PDO(self::$engine . ":host=localhost;dbname=" . self::$name, self::$username, self::$password);
         } catch (PDOException $e) {
             return $e->getMessage();
         }

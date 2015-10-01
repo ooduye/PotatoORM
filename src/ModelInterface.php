@@ -8,11 +8,11 @@ namespace Yemisi;
  */
 interface ModelInterface
 {
-    public function getAll();
+    public static function getAll();
 
-    public function find($id);
+    public static function find($id);
 
-    public function save();
+    public static function save();
 
-    public function destroy($id);
+    public static function destroy($id);
 }
