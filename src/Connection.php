@@ -2,13 +2,15 @@
 
 namespace Yemisi;
 
+use Dotenv\Dotenv;
 use PDO;
 use PDOException;
-use Dotenv\Dotenv;
+
 
 /**
  * Class Connection
  * @package Yemisi
+ *
  */
 abstract class Connection
 {
@@ -23,7 +25,8 @@ abstract class Connection
      */
     public function __construct()
     {
-        self::loadDotEnv();
+        $dotenv = new Dotenv(__DIR__ . '/../');
+        $dotenv->load();
         self::$engine   = getenv('DB_ENGINE');
         self::$name     = getenv('DB_NAME');
         self::$username = getenv('DB_USERNAME');
@@ -33,20 +36,20 @@ abstract class Connection
     /**
      *
      */
-    private static function loadDotEnv(){
+    public function loadDotEnv(){
         $dotenv = new Dotenv(__DIR__ . '/../');
         $dotenv->load();
     }
 
     /**
-     * @return \PDO
+     * @return PDO|string
      */
     protected static function createConnection()
     {
         try {
             return new PDO(self::$engine . ":host=localhost;dbname=" . self::$name, self::$username, self::$password);
         } catch (PDOException $e) {
-            return $e->getMessage();
+            return "Connection to database failed: " . $e->getMessage();
         }
     }
 }
