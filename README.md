@@ -1,6 +1,5 @@
 # Potato ORM
 
-[![Software License][ico-license]](LICENSE.md)
 [![Build Status][ico-travis]][link-travis]
 
 A simple agnostic Object Relational Mapper(ORM) in PHP 
