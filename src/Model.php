@@ -5,12 +5,14 @@ namespace Yemisi;
 use PDO;
 use PDOException;
 use Yemisi\Inflect;
+use Yemisi\Database\Connection;
+use Yemisi\Structure\ModelStructure;
 
 /**
  * Class Model
  * @package Yemisi
  */
-abstract class Model extends Connection implements Structure
+abstract class Model extends Connection implements ModelStructure
 {
 
     private static $className;
@@ -53,6 +55,8 @@ abstract class Model extends Connection implements Structure
 
     /**
      * @return array
+     *
+     * Method to get properties array
      */
     public static function getProperties()
     {
@@ -61,18 +65,25 @@ abstract class Model extends Connection implements Structure
 
     /**
      * @return string
+     *
+     * Method to convert class name to camel case
      */
     public static function from_camel_case() {
         preg_match_all('!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!', self::$className, $matches);
+
         $ret = $matches[0];
+
         foreach ($ret as &$match) {
             $match = $match == strtoupper($match) ? strtolower($match) : lcfirst($match);
         }
+
         return implode('_', $ret);
     }
 
     /**
      * @return mixed
+     *
+     * Method to get the table name
      */
     public static function getTableName()
     {
@@ -81,6 +92,8 @@ abstract class Model extends Connection implements Structure
 
     /**
      * @return array|string
+     *
+     * Method to fetch all data from a table
      */
     public static function getAll()
     {
@@ -95,6 +108,8 @@ abstract class Model extends Connection implements Structure
     /**
      * @param $id
      * @return string|static
+     *
+     * Method to find a row in a table
      */
     public static function find($id)
     {
@@ -116,36 +131,43 @@ abstract class Model extends Connection implements Structure
     /**
      * @return string
      *
-     * Method to either save properties gotten from magic method
+     * Method to save properties to a table
      */
     public function save()
     {
         $properties = self::getProperties();
+
         if($this->doUpdate) {
             $id = $this->doUpdate;
+
             self::update($id, $properties);
         } else {
             $table = self::getTableName();
             $columns    = implode(',',array_keys($properties));
             $values     = "'" . implode("','", array_values($properties)) . "'";
+
             try {
                 $result = self::createConnection()->query("INSERT INTO {$table}({$columns}) VALUES({$values})");
+                return $result->rowCount();
             } catch (PDOException $e) {
                 return $e->getMessage();
             }
         }
-        return $result->rowCount();
     }
 
     /**
      * @param $id
      * @param $properties
      * @return string
+     *
+     * Method to update a row on a table
      */
     public static function update($id, $properties)
     {
         unset($properties['doUpdate']);
+
         $table = self::getTableName();
+
         $query = "UPDATE ".$table." SET ";
         $count = 0;
         foreach($properties as $key => $value) {
@@ -156,6 +178,7 @@ abstract class Model extends Connection implements Structure
             }
         }
         $query .= " WHERE id = " . $id;
+
         try {
             $count = self::createConnection()->prepare($query);
             $count->execute();
@@ -168,6 +191,8 @@ abstract class Model extends Connection implements Structure
     /**
      * @param $id
      * @return string
+     *
+     * Method to delete a row from a table
      */
     public static function destroy($id)
     {

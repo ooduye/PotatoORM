@@ -1,11 +1,10 @@
 <?php
 
-namespace Yemisi;
+namespace Yemisi\Database;
 
-use Dotenv\Dotenv;
 use PDO;
 use PDOException;
-
+use Dotenv\Dotenv;
 
 /**
  * Class Connection
@@ -21,12 +20,11 @@ abstract class Connection
     protected static $password;
 
     /**
-     *
+     * Setting the environment variables
      */
     public function __construct()
     {
-        $dotenv = new Dotenv(__DIR__ . '/../');
-        $dotenv->load();
+        $this->loadDotEnv();
         self::$engine   = getenv('DB_ENGINE');
         self::$name     = getenv('DB_NAME');
         self::$username = getenv('DB_USERNAME');
@@ -34,15 +32,17 @@ abstract class Connection
     }
 
     /**
-     *
+     * Method to load environment variables
      */
     public function loadDotEnv(){
-        $dotenv = new Dotenv(__DIR__ . '/../');
+        $dotenv = new Dotenv(__DIR__ . '/../../');
         $dotenv->load();
     }
 
     /**
      * @return PDO|string
+     *
+     * Method to create PDO connection
      */
     public static function createConnection()
     {

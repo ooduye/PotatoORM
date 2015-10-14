@@ -9,6 +9,7 @@ use Yemisi\Inflect;
  * @package Yemisi\Test
  */
 class InflectTest extends \PHPUnit_Framework_TestCase {
+
     /**
      * @param $expected
      * @param $actual
@@ -19,6 +20,10 @@ class InflectTest extends \PHPUnit_Framework_TestCase {
     {
         $this->assertEquals($expected, Inflect::pluralize($actual));
     }
+
+    /**
+     * @return array
+     */
     public function wordProvider()
     {
         return [

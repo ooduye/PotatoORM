@@ -8,7 +8,10 @@
 
 namespace Yemisi;
 
-
+/**
+ * Class Inflect
+ * @package Yemisi
+ */
 class Inflect
 {
     static $plural = array(
@@ -88,6 +91,12 @@ class Inflect
         'equipment'
     );
 
+    /**
+     * @param $string
+     * @return mixed
+     *
+     * Method to pluralize strings
+     */
     public static function pluralize( $string )
     {
         // save some time in the case that singular and plural are the same
@@ -101,17 +110,30 @@ class Inflect
             $pattern = '/' . $pattern . '$/i';
 
             if ( preg_match( $pattern, $string ) )
-                return preg_replace( $pattern, $result, $string);
+                return self::searchAndReplaceRegularExpression($pattern, $result, $string);
         }
 
         // check for matches using regular expressions
         foreach ( self::$plural as $pattern => $result )
         {
             if ( preg_match( $pattern, $string ) )
-                return preg_replace( $pattern, $result, $string );
+                return self::searchAndReplaceRegularExpression($pattern, $result, $string);
         }
 
         return $string;
+    }
+
+    /**
+     * @param $pattern
+     * @param $result
+     * @param $string
+     * @return mixed
+     *
+     * Method to search and replace regular expressions
+     */
+    public static function searchAndReplaceRegularExpression($pattern, $result, $string)
+    {
+        return preg_replace( $pattern, $result, $string);
     }
 
 
