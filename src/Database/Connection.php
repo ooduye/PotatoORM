@@ -15,9 +15,11 @@ abstract class Connection
 {
 
     protected static $engine;
+    protected static $host;
     protected static $name;
     protected static $username;
     protected static $password;
+    protected static $options;
 
     /**
      * Setting the environment variables
@@ -26,9 +28,14 @@ abstract class Connection
     {
         $this->loadDotEnv();
         self::$engine   = getenv('DB_ENGINE');
+        self::$host     = getenv('DB_HOST');
         self::$name     = getenv('DB_NAME');
         self::$username = getenv('DB_USERNAME');
         self::$password = getenv('DB_PASSWORD');
+        self::$options = [
+            PDO::ATTR_PERSISTENT => true,
+            PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION
+        ];
     }
 
     /**
@@ -47,7 +54,7 @@ abstract class Connection
     public static function createConnection()
     {
         try {
-            return new PDO(self::$engine . ":host=localhost;dbname=" . self::$name, self::$username, self::$password);
+            return new PDO(self::$engine . ":host=". self::$host .";dbname=" . self::$name, self::$username, self::$password, self::$options);
         } catch (PDOException $e) {
             return "Connection to database failed: " . $e->getMessage();
         }
