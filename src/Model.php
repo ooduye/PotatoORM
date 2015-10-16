@@ -12,7 +12,7 @@ use Yemisi\Structure\ModelStructure;
  * Class Model
  * @package Yemisi
  */
-abstract class Model extends Connection implements ModelStructure
+abstract class Model implements ModelStructure
 {
 
     private static $className;
@@ -24,7 +24,6 @@ abstract class Model extends Connection implements ModelStructure
      */
     public function __construct()
     {
-        parent::__construct();
         self::$className = substr( get_called_class() , 7 );
         self::$tableName = static::getTableName();
     }
@@ -99,7 +98,7 @@ abstract class Model extends Connection implements ModelStructure
     {
         $table = self::getTableName();
         try {
-            return self::createConnection()->query("SELECT * FROM {$table}")->fetchAll();
+            return Connection::createConnection()->query("SELECT * FROM {$table}")->fetchAll();
         } catch (PDOException $e) {
             return $e->getMessage();
         }
@@ -116,7 +115,7 @@ abstract class Model extends Connection implements ModelStructure
         $class = new static;
         $table = self::getTableName();
         try {
-            $stmt = self::createConnection()->prepare("Select * FROM {$table} where id = ?");
+            $stmt = Connection::createConnection()->prepare("Select * FROM {$table} where id = ?");
             $stmt->execute(array($id));
             $data = $stmt->fetchAll();
             $class->doUpdate = $data[0]['id'];
@@ -147,7 +146,7 @@ abstract class Model extends Connection implements ModelStructure
             $values     = "'" . implode("','", array_values($properties)) . "'";
 
             try {
-                $result = self::createConnection()->query("INSERT INTO {$table}({$columns}) VALUES({$values})");
+                $result = Connection::createConnection()->query("INSERT INTO {$table}({$columns}) VALUES({$values})");
                 return $result->rowCount();
             } catch (PDOException $e) {
                 return $e->getMessage();
@@ -180,7 +179,7 @@ abstract class Model extends Connection implements ModelStructure
         $query .= " WHERE id = " . $id;
 
         try {
-            $count = self::createConnection()->prepare($query);
+            $count = Connection::createConnection()->prepare($query);
             $count->execute();
         } catch (PDOException $e) {
             return $e->getMessage();
@@ -198,7 +197,7 @@ abstract class Model extends Connection implements ModelStructure
     {
         $table = self::getTableName();
         try {
-            $count = self::createConnection()->prepare("DELETE FROM {$table} WHERE id = ?");
+            $count = Connection::createConnection()->prepare("DELETE FROM {$table} WHERE id = ?");
             $count->execute(array($id));
         } catch (PDOException $e) {
             return $e->getMessage();

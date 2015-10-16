@@ -11,7 +11,7 @@ use Dotenv\Dotenv;
  * @package Yemisi
  *
  */
-abstract class Connection
+class Connection
 {
 
     protected static $engine;
@@ -24,9 +24,9 @@ abstract class Connection
     /**
      * Setting the environment variables
      */
-    public function __construct()
+    public static function getEnv()
     {
-        $this->loadDotEnv();
+        static::loadDotEnv();
         self::$engine   = getenv('DB_ENGINE');
         self::$host     = getenv('DB_HOST');
         self::$name     = getenv('DB_NAME');
@@ -41,7 +41,7 @@ abstract class Connection
     /**
      * Method to load environment variables
      */
-    public function loadDotEnv(){
+    public static function loadDotEnv(){
         $dotenv = new Dotenv(__DIR__ . '/../../');
         $dotenv->load();
     }
@@ -53,6 +53,7 @@ abstract class Connection
      */
     public static function createConnection()
     {
+        static::getEnv();
         try {
             return new PDO(self::$engine . ":host=". self::$host .";dbname=" . self::$name, self::$username, self::$password, self::$options);
         } catch (PDOException $e) {
