@@ -81,17 +81,6 @@ class DatabaseModelTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Test the getAll function
-     */
-    public function testModelCanGetAll()
-    {
-        $rows = ["name" => 'yemisi', "age" => "10"];
-        $mock = Mockery::mock('Yemisi\Test\ModelStub');
-        $mock->shouldReceive('getAll')->once()->andReturn($rows);
-        $this->assertEquals($mock->getAll(), ["name" => 'yemisi', "age" => "10"]);
-    }
-
-    /**
      * Test the destroy function
      */
     public function testModelCanBeDeleted()
@@ -101,18 +90,6 @@ class DatabaseModelTest extends \PHPUnit_Framework_TestCase
             ->with(1)
             ->once()
             ->andReturn(true);
-    }
-
-    /**
-     * Test the update function
-     */
-    public function testModelCanBeUpdated()
-    {
-        $properties = ["name" => 'yemisi', "age" => "10"];
-        $result = true;
-        $mock = Mockery::mock('ModelStub');
-        $mock->shouldReceive('update')->with(1, $properties)->andReturn($result);
-        $this->assertEquals($mock->update(1, $properties), true);
     }
 
     /**
