@@ -16,7 +16,11 @@ matrix:
     - php: hhvm
 
 env:
-  - DB=mysql
+  - DB_HOST=localhost
+  - DB_ENGINE=mysql
+  - DB_USERNAME=root
+  - DB_PASSWORD=root
+  - DB_NAME=todo
 
 before_script:
   - composer install
