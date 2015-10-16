@@ -24,7 +24,7 @@ abstract class Model extends Connection implements ModelStructure
      */
     public function __construct()
     {
-        parent::__construct();
+//        parent::__construct();
         self::$className = substr( get_called_class() , 7 );
         self::$tableName = static::getTableName();
     }
