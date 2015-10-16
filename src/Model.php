@@ -15,7 +15,6 @@ use Yemisi\Structure\ModelStructure;
 abstract class Model implements ModelStructure
 {
 
-    private static $className;
     private static $tableName;
     private static $properties = [];
 
@@ -24,7 +23,7 @@ abstract class Model implements ModelStructure
      */
     public function __construct()
     {
-        self::$className = substr( get_called_class() , 7 );
+        static::getClassName();
         self::$tableName = static::getTableName();
     }
 
@@ -63,12 +62,23 @@ abstract class Model implements ModelStructure
     }
 
     /**
+     * @return mixed
+     *
+     * Method to get Called Class name
+     */
+    public static function getClassName() {
+        $get_class = explode("\\", get_called_class());
+        return end($get_class);
+    }
+
+    /**
      * @return string
      *
      * Method to convert class name to camel case
      */
     public static function from_camel_case() {
-        preg_match_all('!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!', self::$className, $matches);
+        // Performing a global regular expression match
+        preg_match_all('!([A-Z][A-Z0-9]*(?=$|[A-Z][a-z0-9])|[A-Za-z][a-z0-9]+)!', self::getClassName(), $matches);
 
         $ret = $matches[0];
 

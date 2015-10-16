@@ -42,7 +42,7 @@ class Connection
      * Method to load environment variables
      */
     public static function loadDotEnv(){
-        $dotenv = new Dotenv($_SERVER['DOCUMENT_ROOT']);
+        $dotenv = new Dotenv(__DIR__ . '/../../');
         $dotenv->load();
     }
 

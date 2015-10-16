@@ -14,6 +14,12 @@ $ composer require ooduye/potato-orm
 
 ## Usage
 
+### INSTRUCTION
+The table name to be created inside your database has to be the plural of the Class name extending the Model class in small letters separated by an underscore before each next upper case character.
+
+* For example:
+If `Class Name` is `UserProfileName` then the table name should be `user_profile_names`
+
 ``` php
 //To retrieve data
 $user = User::getAll();

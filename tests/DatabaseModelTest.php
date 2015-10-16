@@ -32,7 +32,7 @@ class DatabaseModelTest extends \PHPUnit_Framework_TestCase
             ->andReturn($connection);
         $model = new ModelStub();
         $tableName = $model->getTableName();
-        $this->assertEquals('test_model_stubs', $tableName);
+        $this->assertEquals('model_stubs', $tableName);
         $this->assertNotEquals('test_model_stub', $tableName);
     }
 
